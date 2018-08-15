@@ -1,0 +1,104 @@
+[2018-01-09 18:05:06,199][INFO ][no.found.bootstrap.BootstrapInitial] Loaded bootstrap settings {}
+[2018-01-09 18:05:10,857][WARN ][no.found.docker.DockerContainerManager] Default registry [docker.elastic.co] has no auths. Known auths: [List()] {}
+[2018-01-09 18:05:13,305][INFO ][no.found.docker.DockerContainerManager] Starting container [frc-zookeeper-servers-zookeeper] {"ec_container_kind":"docker","ec_container_group":"zookeeper-servers","ec_container_name":"zookeeper"}
+[2018-01-09 18:05:13,390][INFO ][no.found.docker.DockerContainerManager] Starting container [frc-client-forwarders-client-forwarder] {"ec_container_kind":"docker","ec_container_group":"client-forwarders","ec_container_name":"client-forwarder"}
+[2018-01-09 18:05:13,693][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] Starting {}
+[2018-01-09 18:05:13,709][INFO ][no.found.curator.ForwardedEnsembleProvider] Unable to read servers list from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1], falling back to [0.0.0.0:2181] {}
+[2018-01-09 18:05:13,709][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [0.0.0.0:2181/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:13,728][INFO ][no.found.curator.ForwardedEnsembleProvider] Unable to read servers list from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1], falling back to [0.0.0.0:2181] {}
+[2018-01-09 18:05:13,728][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [0.0.0.0:2181/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:13,730][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] Curator Schemas:
+
+ {}
+[2018-01-09 18:05:14,731][INFO ][no.found.curator.ForwardedEnsembleProvider] Unable to read servers list from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1], falling back to [0.0.0.0:2181] {}
+[2018-01-09 18:05:14,731][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [0.0.0.0:2181/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:15,732][INFO ][no.found.curator.ForwardedEnsembleProvider] Unable to read servers list from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1], falling back to [0.0.0.0:2181] {}
+[2018-01-09 18:05:15,733][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [0.0.0.0:2181/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:16,734][INFO ][no.found.curator.ForwardedEnsembleProvider] Unable to read servers list from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1], falling back to [0.0.0.0:2181] {}
+[2018-01-09 18:05:16,735][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [0.0.0.0:2181/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:17,920][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [172.25.20.40:22191/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:17,921][INFO ][org.apache.curator.ConnectionState] Connection string changed to: 0.0.0.0:2181/v1 {}
+[2018-01-09 18:05:18,239][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [172.25.20.40:22191/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:18,261][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/v1] to [172.25.20.40:22191/v1] with local namespace [/v1] {}
+[2018-01-09 18:05:18,267][INFO ][org.apache.curator.framework.state.ConnectionStateManager] State change: CONNECTED {}
+[2018-01-09 18:05:18,291][INFO ][org.apache.curator.framework.imps.EnsembleTracker] New config event received: {version=100000000, server.10=localhost:2898:3898:participant;0.0.0.0:2191} {}
+[2018-01-09 18:05:18,328][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] Starting {}
+[2018-01-09 18:05:18,334][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/] to [172.25.20.40:22191/] with local namespace [/] {}
+[2018-01-09 18:05:18,338][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/] to [172.25.20.40:22191/] with local namespace [/] {}
+[2018-01-09 18:05:18,338][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] Curator Schemas:
+
+ {}
+[2018-01-09 18:05:18,346][INFO ][no.found.curator.ForwardedEnsembleProvider] Resolved connection string from [http://172.25.20.40:2180/zookeeper/clients/ensemble/connection-string?namespace=/] to [172.25.20.40:22191/] with local namespace [/] {}
+[2018-01-09 18:05:18,347][INFO ][org.apache.curator.framework.state.ConnectionStateManager] State change: CONNECTED {}
+[2018-01-09 18:05:18,349][INFO ][org.apache.curator.framework.imps.EnsembleTracker] New config event received: {version=100000000, server.10=localhost:2898:3898:participant;0.0.0.0:2191} {}
+[2018-01-09 18:05:18,376][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] backgroundOperationsLoop exiting {}
+[2018-01-09 18:05:18,752][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [runners] with acls: List(31,s{'digest,'runners:alDaVq1oYabkq85JzF0DYXlGzlM=}
+, 31,s{'digest,'runners:BIDD8vccsMW2tCe8xKzrK5t8uXM=}
+) {}
+[2018-01-09 18:05:18,789][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [zookeeper-servers] with acls: List(31,s{'digest,'runners:TKtYtVCb11JYolU/fx3C8O3NqQc=}
+, 31,s{'digest,'zookeeper-servers:TXE5f/sHAE55GE9EBPoTXJAZERk=}
+) {}
+[2018-01-09 18:05:18,812][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [client-forwarders] with acls: List(31,s{'digest,'runners:g45/YceKIPdNR/mKrjNZzeten8c=}
+, 31,s{'digest,'client-forwarders:6pzvEq9c5nRTPa4xLrii8AbRL0Q=}
+) {}
+[2018-01-09 18:05:18,831][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [client-observers] with acls: List(31,s{'digest,'runners:OwPaGHzBDoFqmlGcc4CgdrpgS7k=}
+, 31,s{'digest,'client-observers:6HSDZfhiBRpKGLLY6paENTpb0L8=}
+) {}
+[2018-01-09 18:05:18,849][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [directors] with acls: List(31,s{'digest,'runners:8/enTn36Zjr+BBbvgbBPxYBeZXc=}
+, 31,s{'digest,'directors:gcfsQtcD/ZAXsmrHfHqeRUv6pu0=}
+) {}
+[2018-01-09 18:05:18,864][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [blueprints] with acls: List(31,s{'digest,'runners:d8gUKpv0/4Puh0khv3N5JpyUqVE=}
+, 31,s{'digest,'blueprints:NcLrdvFjlWQTQFqKEgqHi0YOskU=}
+) {}
+[2018-01-09 18:05:18,903][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [services-forwarders] with acls: List(31,s{'digest,'runners:2N24kAxCBFBTjTczl3mrMkCB/fA=}
+, 31,s{'digest,'services-forwarders:/2UWTDBC2U3h0/VVEzunvB3P3uU=}
+) {}
+[2018-01-09 18:05:18,926][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [constructors] with acls: List(31,s{'digest,'runners:+49EqGDcv+g8Cw7Fi995o/j08Vk=}
+, 31,s{'digest,'constructors:l5FMqsASg49/2PH/fbJ4yqDy8WM=}
+) {}
+[2018-01-09 18:05:18,943][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [allocators] with acls: List(31,s{'digest,'runners:xfnKvHh3xuiiFLB6aPzvf2q718c=}
+, 31,s{'digest,'allocators:9DQvVU8VlUCybLppXv7vRDyGQQ4=}
+) {}
+[2018-01-09 18:05:18,972][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [admin-consoles] with acls: List(31,s{'digest,'runners:/81MOCgnqRL8trOU2O3jm6DsB4w=}
+, 31,s{'digest,'admin-consoles:GNhWMov21ysw5tbUu0WCBpOfgZY=}
+) {}
+[2018-01-09 18:05:19,216][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [cloud-uis] with acls: List(31,s{'digest,'runners:+bBKRUieeZHAvquqHZRaLvZUcL8=}
+, 31,s{'digest,'cloud-uis:RVE295bTzC9bSSJYBQV0omLQEM4=}
+) {}
+[2018-01-09 18:05:19,234][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [proxies] with acls: List(31,s{'digest,'runners:O01ymZC1HjBYZpTpTRpDrFT8FXI=}
+, 31,s{'digest,'proxies:A9PXg366o14RAZQfH52a5nkiEP0=}
+) {}
+[2018-01-09 18:05:19,244][INFO ][org.apache.curator.framework.imps.EnsembleTracker] New config event received: {version=100000000, server.10=localhost:2898:3898:participant;0.0.0.0:2191} {}
+[2018-01-09 18:05:19,251][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [beats-runners] with acls: List(31,s{'digest,'runners:A6tPxae7Z3Sm2xzAcbvqsWF3ot0=}
+, 31,s{'digest,'beats-runners:T4aYAiYXRox6PJzcgB/qjAQs/Tc=}
+) {}
+[2018-01-09 18:05:19,268][INFO ][no.found.bootstrap.BootstrapInitial] Creating container set [curators] with acls: List(31,s{'digest,'runners:0eovTHDNthygCv3cK2IiVuxTmhQ=}
+, 31,s{'digest,'curators:w0iHz2vHP1eQC1rC/4C0B18+Sdw=}
+) {}
+[2018-01-09 18:05:19,285][INFO ][no.found.bootstrap.BootstrapInitial] Starting local runner {}
+[2018-01-09 18:05:19,315][INFO ][no.found.docker.DockerContainerManager] Starting container [frc-runners-runner] {"ec_container_kind":"docker","ec_container_group":"runners","ec_container_name":"runner"}
+[2018-01-09 18:05:19,495][INFO ][no.found.bootstrap.BootstrapInitial] Started local runner {}
+[2018-01-09 18:05:19,497][INFO ][no.found.bootstrap.BootstrapInitial] Waiting for runner container node {}
+[2018-01-09 18:05:22,749][INFO ][no.found.bootstrap.BootstrapInitial] Runner container node detected {}
+[2018-01-09 18:05:22,901][INFO ][no.found.bootstrap.BootstrapInitial] Waiting for coordinator candidate {}
+[2018-01-09 18:05:34,610][INFO ][no.found.bootstrap.BootstrapInitial] Detected coordinator candidate {}
+[2018-01-09 18:05:34,621][INFO ][no.found.bootstrap.BootstrapInitial] Detected pending coordinator, promoting coordinator {}
+[2018-01-09 18:05:34,714][INFO ][no.found.zookeeper.models.coordinators.CoordinatorCandidatePendingInfo] Current instances: [4294967329,4294967329,1515521118564,1515521118564,0,0,0,0,2,0,4294967329], secrets: [4294967331,4294967331,1515521118576,1515521118576,0,0,0,0,20058,0,4294967331] {}
+[2018-01-09 18:05:34,799][INFO ][no.found.bootstrap.BootstrapInitial] Coordinator accepted {}
+[2018-01-09 18:05:34,800][INFO ][no.found.bootstrap.BootstrapInitial] Storing current platform version: 1.1.2 {}
+[2018-01-09 18:05:34,851][INFO ][no.found.bootstrap.BootstrapInitial] Storing Elastic Stack versions: [2.4.6,5.6.5,6.0.1] {}
+[2018-01-09 18:05:35,084][INFO ][no.found.bootstrap.BootstrapInitial] Creating Admin Console Elasticsearch backend {}
+[2018-01-09 18:05:35,402][INFO ][no.found.bootstrap.ServiceLayerBootstrap] Waiting for [ensuring-plan] to complete. Retrying every [1 second] (cause: [org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode for /clusters/2c5d1eab312e4688be367697a4f97485/plans/status]) {}
+[2018-01-09 18:05:45,979][INFO ][no.found.bootstrap.ServiceLayerBootstrap] Waiting for [ensuring-plan] to complete. Retrying every [1 second] (cause: [java.lang.Exception: not yet started]) {}
+[2018-01-09 18:06:12,528][INFO ][no.found.bootstrap.BootstrapInitial] Applying Admin Console Elasticsearch index templates {}
+[2018-01-09 18:06:13,053][INFO ][no.found.bootstrap.BootstrapInitial] Updating dynamic Admin Console settings with Elasticsearch cluster information {}
+[2018-01-09 18:06:13,069][INFO ][no.found.bootstrap.BootstrapInitial] Starting reindexing Admin Console data {}
+[2018-01-09 18:06:13,718][INFO ][no.found.bootstrap.BootstrapInitial] Creating Logging and Metrics Cluster {}
+[2018-01-09 18:06:13,854][INFO ][no.found.bootstrap.ServiceLayerBootstrap] Waiting for [ensuring-plan] to complete. Retrying every [1 second] (cause: [org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode for /clusters/a3ff5a9aae4d43899620e790cf55c1d0/plans/status]) {}
+[2018-01-09 18:06:14,876][INFO ][no.found.bootstrap.ServiceLayerBootstrap] Waiting for [ensuring-plan] to complete. Retrying every [1 second] (cause: [java.lang.Exception: not yet started]) {}
+[2018-01-09 18:06:37,451][INFO ][no.found.bootstrap.BootstrapInitial] Enabling Kibana for Logging and Metrics Cluster {}
+[2018-01-09 18:06:37,746][INFO ][no.found.bootstrap.ServiceLayerBootstrap] waiting for cluster [KibanaCluster(da84bb11717144bc927d6c5b723f1462)] {}
+[2018-01-09 18:06:37,764][INFO ][no.found.bootstrap.ServiceLayerBootstrap] Waiting for [waiting-for-cluster] to complete. Retrying every [1 second] (cause: [java.lang.Exception: not yet started]) {}
+[2018-01-09 18:06:58,313][INFO ][no.found.bootstrap.BootstrapInitial] Shutting down bootstrapper {}
+[2018-01-09 18:06:58,314][INFO ][org.apache.curator.framework.imps.CuratorFrameworkImpl] backgroundOperationsLoop exiting {}
+[2018-01-09 18:06:58,326][INFO ][no.found.bootstrap.BootstrapInitial] Exiting bootstrapper {}
