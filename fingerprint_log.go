@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -55,18 +54,6 @@ func hashString(s string) string {
 	h.Write([]byte(s))
 	return fmt.Sprintf("%x", h.Sum64())
 	// return fmt.Sprintf("%x", md5.Sum([]byte(s)))
-}
-
-func processLine(line string, writer *bufio.Writer) {
-	if lineStart(line) {
-		// write prior event to file
-		flushevent(writer)
-		// empty event
-		event = event[:0]
-		event = append(event, line)
-	} else {
-		event = append(event, line)
-	}
 }
 
 // regex match that line starts with `[YYYY.MM.dd`
@@ -136,6 +123,102 @@ func flushevent(writer *bufio.Writer) {
 	}
 }
 
+var r = regexp.MustCompile(`(?m)((?:(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2}))(?::\d+)?)`)
+var uid = regexp.MustCompile(`(?m)[0-9a-z]{32}`)
+var node = regexp.MustCompile(`(node \[?[A-Za-z0-9-_]{22}\]?)`)
+var node2 = regexp.MustCompile(`((?:{.*?}){6})`)
+var nodeName = regexp.MustCompile(`^(?:\[.*?\]){3} \[(?P<NodeName>.*?)\]`)
+var indexAndShard = regexp.MustCompile(`\[(.*?)\]\[(\d+)\]`)
+
+func analyze(message []string) {
+	line := strings.Join(message, "\n")
+
+	match := nodeName.FindStringSubmatch(line)
+	result := make(map[string]string)
+	for i, name := range nodeName.SubexpNames() {
+		if i != 0 && name != "" {
+			result[name] = match[i]
+		}
+	}
+	// name := regexp.MustCompile(result["NodeName"])
+
+	fmt.Printf("by name: %s\n", result["NodeName"])
+
+	// line := scanner.Text()
+
+	fmt.Println(line)
+	// fmt.Printf("%#v\n", nodeName.FindStringSubmatch(line))
+	// fmt.Printf("%q\n", nodeName.SubexpNames())
+	// reversed := fmt.Sprintf("${%s} ${%s}", nodeName.SubexpNames()[2], nodeName.SubexpNames()[1])
+	// fmt.Println(reversed)
+	line = strings.Replace(line, result["NodeName"], "", -1)
+	// line = name.ReplaceAllString(line, "")
+
+	line = r.ReplaceAllString(line, "")
+	line = uid.ReplaceAllString(line, "")
+	line = node.ReplaceAllString(line, "")
+	line = node2.ReplaceAllString(line, "")
+	line = indexAndShard.ReplaceAllString(line, "")
+
+	fmt.Println(line)
+
+	startOffset := 0
+	var s = []opt{}
+	if len(line) > 25 {
+		thing := strings.NewReader(strings.ToLower(line[25:]))
+		// thing := strings.NewReader(strings.ToLower(line))
+
+		segmenter := segment.NewWordSegmenter(thing)
+
+		for segmenter.Segment() {
+			endOffset := startOffset + len(segmenter.Bytes())
+
+			if segmenter.Type() > 1 {
+				// tokenBytes := segmenter.Bytes()
+				// tokenType := segmenter.Type()
+
+				// fmt.Printf("|%6d|%4d|%4d|%10s|\n", tokenType, startOffset, endOffset, string(tokenBytes))
+
+				test := opt{
+					TokenType:   segmenter.Type(),
+					Startoffset: startOffset,
+					Endoffset:   endOffset,
+					Position:    len(s),
+					Token:       segmenter.Text(),
+				}
+				s = append(s, test)
+
+				fmt.Printf("|%6d|%4d|%4d|%10s|\n", test.TokenType, test.Startoffset, test.Endoffset, test.Token)
+			}
+			// update start position
+			startOffset = endOffset
+		}
+		if err := segmenter.Err(); err != nil {
+			log.Fatal(err)
+		}
+		// fmt.Printf("%+v\n", s)
+
+		// b, err := json.Marshal(s)
+		// if err != nil {
+		// 	fmt.Println("error:", err)
+		// }
+		// fmt.Println(string(b))
+		// os.Stdout.Write(b)
+
+	} else {
+		// These are multiline messages that I'm not currently capturing
+		// for now, do nothing.
+		// fmt.Printf("short line: %s", line)
+	}
+}
+
+func flush(message []string) {
+	if len(message) > 0 {
+		fmt.Println(len(message))
+		analyze(message)
+	}
+}
+
 func readFile(filepath string, writer *bufio.Writer) {
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -143,64 +226,24 @@ func readFile(filepath string, writer *bufio.Writer) {
 	}
 	defer file.Close()
 
-	r := regexp.MustCompile(`(?m)((?:(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2}))(?::\d+)?)`)
-	uid := regexp.MustCompile(`(?m)[0-9a-z]{32}`)
 	scanner := bufio.NewScanner(file)
 	//scanner.Split(segment.SplitWords)
 
+	var message []string
 	for scanner.Scan() {
-		startOffset := 0
-
-		var s = []opt{}
-
 		line := scanner.Text()
-		fmt.Println(line)
-		line = r.ReplaceAllString(line, "")
-		line = uid.ReplaceAllString(line, "")
 
-		if len(line) > 25 {
-			thing := strings.NewReader(strings.ToLower(line[25:]))
-			// thing := strings.NewReader(strings.ToLower(line))
-
-			segmenter := segment.NewWordSegmenter(thing)
-
-			for segmenter.Segment() {
-				endOffset := startOffset + len(segmenter.Bytes())
-
-				if segmenter.Type() > 0 {
-					// tokenBytes := segmenter.Bytes()
-					// tokenType := segmenter.Type()
-
-					// fmt.Printf("|%6d|%4d|%4d|%10s|\n", tokenType, startOffset, endOffset, string(tokenBytes))
-
-					test := opt{
-						TokenType:   segmenter.Type(),
-						Startoffset: startOffset,
-						Endoffset:   endOffset,
-						Position:    len(s),
-						Token:       segmenter.Text(),
-					}
-					s = append(s, test)
-				}
-				// update start position
-				startOffset = endOffset
-			}
-			if err := segmenter.Err(); err != nil {
-				log.Fatal(err)
-			}
-			// fmt.Printf("%+v\n", s)
-
-			b, err := json.Marshal(s)
-			if err != nil {
-				fmt.Println("error:", err)
-			}
-			// os.Stdout.Write(b)
-			fmt.Println(string(b))
-
+		// process multiline messages
+		if !lineStart(line) {
+			message = append(message, line)
+			// write prior event to file
+			// flushevent(writer)
+			// empty event
+			// event = event[:0]
+			// event = append(event, line)
 		} else {
-			// These are multiline messages that I'm not currently capturing
-			// for now, do nothing.
-			// fmt.Printf("short line: %s", line)
+			flush(message)
+			message = []string{line}
 		}
 	}
 	if err := scanner.Err(); err != nil {
