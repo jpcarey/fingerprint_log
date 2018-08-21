@@ -46,6 +46,9 @@ func counter(bucket string, value int) {
 	mux.Unlock()
 }
 
+// CACHE used for checking for duplicate messages
+var CACHE = make(map[string]string)
+
 func main() {
 
 	// if err != nil {
@@ -146,11 +149,10 @@ type opt struct {
 	Token       string `json:"token"`
 }
 
-func analyze(message []string) {
-	line := strings.Join(message, "\n")
+func stripIndetifyingData(line string) string {
 
-	if indexToEs {
-		esbulk.Index(line, es.Client)
+	if printDebug {
+		fmt.Println(line)
 	}
 
 	match := nodeName.FindStringSubmatch(line)
@@ -160,26 +162,51 @@ func analyze(message []string) {
 			result[name] = match[i]
 		}
 	}
+	line = strings.Replace(line, result["NodeName"], "node_name", -1)
 
 	// fmt.Printf("by name: %s\n", result["NodeName"])
 
-	if printDebug {
-		fmt.Println(line)
-	}
-
-	line = strings.Replace(line, result["NodeName"], "", -1)
 	// name := regexp.MustCompile(result["NodeName"])
 	// line = name.ReplaceAllString(line, "")
 
-	line = r.ReplaceAllString(line, "")
-	line = uid.ReplaceAllString(line, "")
-	line = node.ReplaceAllString(line, "")
+	line = ipv4.ReplaceAllString(line, "")
+	// line = uid.ReplaceAllString(line, "")
+	// line = node.ReplaceAllString(line, "")
+	line = node.ReplaceAllString(line, "node [node_id]")
+	line = hexString.ReplaceAllString(line, "0x00000000")
 	line = node2.ReplaceAllString(line, "")
-	line = indexAndShard.ReplaceAllString(line, "")
+	line = indexAndShard.ReplaceAllString(line, "[index][shard]")
 
 	if printDebug {
 		fmt.Println(line)
 	}
+
+	return line
+}
+
+func checkDuplicate(line string) {
+	key := hashString(line[25:])
+	if val, ok := CACHE[key]; ok {
+		// duplicate stacktrace
+		fmt.Println(val)
+		counter("matched", 1)
+	} else {
+		// new stacktrace. store in CACHE & write modified event that includes
+		// the hash in the message
+		counter("stacktraces", 1)
+		CACHE[key] = ""
+	}
+}
+
+func analyze(message []string) {
+	line := strings.Join(message, "\n")
+
+	if indexToEs {
+		esbulk.Index(line, es.Client)
+	}
+
+	line = stripIndetifyingData(line)
+	checkDuplicate(line)
 
 	startOffset := 0
 	var s = []opt{}
@@ -202,10 +229,10 @@ func analyze(message []string) {
 				}
 				s = append(s, test)
 
-				if printDebug {
-					fmt.Printf("|%6d|%4d|%4d|%10s|\n", test.TokenType, test.Startoffset,
-						test.Endoffset, test.Token)
-				}
+				// if printDebug {
+				// 	fmt.Printf("|%6d|%4d|%4d|%10s|\n", test.TokenType, test.Startoffset,
+				// 		test.Endoffset, test.Token)
+				// }
 			}
 
 			// update start position
@@ -271,13 +298,14 @@ func closeFile(f *os.File) {
 	f.Close()
 }
 
-var r = regexp.MustCompile(`(?m)((?:(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})` +
+var ipv4 = regexp.MustCompile(`(?m)((?:(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})` +
 	`\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})` +
 	`\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})` +
 	`\.(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2}))(?::\d+)?)`,
 )
 var uid = regexp.MustCompile(`(?m)[0-9a-z]{32}`)
-var node = regexp.MustCompile(`(node \[?[A-Za-z0-9-_]{22}\]?)`)
+var node = regexp.MustCompile(`node \[?([A-Za-z0-9-_]{22})\]?`)
 var node2 = regexp.MustCompile(`((?:{.*?}){6})`)
 var nodeName = regexp.MustCompile(`^(?:\[.*?\]){3} \[(?P<NodeName>.*?)\]`)
-var indexAndShard = regexp.MustCompile(`\[(.*?)\]\[(\d+)\]`)
+var hexString = regexp.MustCompile(`0x(?:[A-Fa-f0-9]{8})`)
+var indexAndShard = regexp.MustCompile(`\[([^ "\*\\<|,>/?]+)\]\[(\d+)\]`)
