@@ -229,10 +229,10 @@ func analyze(message []string) {
 				}
 				s = append(s, test)
 
-				// if printDebug {
-				// 	fmt.Printf("|%6d|%4d|%4d|%10s|\n", test.TokenType, test.Startoffset,
-				// 		test.Endoffset, test.Token)
-				// }
+				if printDebug {
+					fmt.Printf("|%6d|%4d|%4d|%10s|\n", test.TokenType, test.Startoffset,
+						test.Endoffset, test.Token)
+				}
 			}
 
 			// update start position
