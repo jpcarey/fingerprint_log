@@ -1,5 +1,5 @@
-// Package esbulk is used for writing documents to elasticsearch
-package esbulk
+// Package elasticsearch is used for writing documents to elasticsearch
+package elasticsearch
 
 import (
 	"context"

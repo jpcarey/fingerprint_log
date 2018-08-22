@@ -1,4 +1,4 @@
-package esclient
+package elasticsearch
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	// client is a connection handle
+	// Client is a connection handle
 	// for elasticsearch
 	Client, err = elastic.NewClient(
 		elastic.SetURL("https://node01:9200"),
