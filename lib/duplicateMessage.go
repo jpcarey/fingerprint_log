@@ -8,8 +8,8 @@ import (
 // CACHE used for checking for duplicate messages
 var CACHE = make(map[string]string)
 
-func checkDuplicate(line string) {
-	key := HashString(line[25:])
+func checkDuplicate(line string) string {
+	key := HashString(line)
 	if val, ok := CACHE[key]; ok {
 		// duplicate stacktrace
 		fmt.Println(val)
@@ -19,6 +19,15 @@ func checkDuplicate(line string) {
 		// the hash in the message
 		Counter("stacktraces", 1)
 		CACHE[key] = ""
-		es.Search(line[25:], es.Client)
+		matched := es.Search(line, key, es.Client)
+
+		// es.Search(line, key, es.Client)
+
+		if matched {
+			Counter("es_matched", 1)
+		} else {
+			fmt.Println(line)
+		}
 	}
+	return key
 }

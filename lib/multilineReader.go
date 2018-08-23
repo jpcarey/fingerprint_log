@@ -2,8 +2,11 @@ package lib
 
 import (
 	"bufio"
+	"errors"
+	es "fingerprint_log/elasticsearch"
 	"log"
 	"regexp"
+	"time"
 )
 
 // regex match that line starts with `[YYYY.MM.dd`
@@ -15,6 +18,10 @@ func lineStart(line string) bool {
 
 // ReadLines iterates each line and groups multiline messages together
 func ReadLines(scanner *bufio.Scanner) {
+	if es.IndexToEs {
+		go es.Bulk(es.Client)
+	}
+
 	var message []string
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -31,15 +38,28 @@ func ReadLines(scanner *bufio.Scanner) {
 			message = []string{line}
 		}
 	}
+
+	// close out es channel and wait for done.
+	if es.IndexToEs {
+		close(es.Ch)
+		<-es.Done
+	}
+
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func flush(message []string) {
+func flush(message []string) (string, error) {
 	if len(message) > 0 {
 		Counter("messages", 1)
-		// fmt.Println(len(message))
-		Analyze(message)
+		key, line := Analyze(message)
+		if es.IndexToEs {
+			d := es.Doc{Message: line, Timestamp: time.Now(), Hash: key}
+			Counter("es_docs", 1)
+			es.Ch <- d
+		}
+		return line, nil
 	}
+	return "", errors.New("Blank line")
 }

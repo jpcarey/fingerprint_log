@@ -10,7 +10,7 @@ var (
 	// Client is a connection handle
 	// for elasticsearch
 	Client, err = elastic.NewClient(
-		elastic.SetURL("https://node01:9200"),
+		elastic.SetURL("http://node01:9200"),
 		elastic.SetBasicAuth("elastic", "changeme"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheckInterval(10*time.Second),

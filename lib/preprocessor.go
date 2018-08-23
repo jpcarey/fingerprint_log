@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	printDebug = true
+	printDebug = false
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 func StripIndetifyingData(line string) string {
 
 	if printDebug {
-		fmt.Println(line)
+		fmt.Printf("R: %s\n", line)
 	}
 
 	match := nodeName.FindStringSubmatch(line)
@@ -54,7 +54,7 @@ func StripIndetifyingData(line string) string {
 	line = indexAndShard.ReplaceAllString(line, "[index][shard]")
 
 	if printDebug {
-		fmt.Println(line)
+		fmt.Printf("P: %s\n", line)
 	}
 
 	return line
