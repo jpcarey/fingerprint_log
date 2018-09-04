@@ -1,5 +1,7 @@
 fingerprint_log
 *-reduced.*
+tmp/
+data/
 
 # Packages #
 ############

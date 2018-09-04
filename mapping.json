@@ -1,0 +1,96 @@
+PUT test
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "nGram_filter": {
+          "type": "shingle",
+          "max_shingle_size": 3,
+          "min_shingle_size": 3,
+          "output_unigrams": false
+        }
+      },
+      "analyzer": {
+        "nGram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "nGram_filter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "message": {
+          "type": "text",
+          "fields": {
+            "tri": {
+              "type": "text",
+              "analyzer": "nGram_analyzer"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+PUT test
+{
+  "settings": {
+    "index.number_of_shards": 1,
+    "index.number_of_replicas": 0,
+    "analysis": {
+      "analyzer": {
+        "my_fingerprint_analyzer": {
+          "type": "fingerprint",
+          "stopwords": "_english_"
+        },
+        "nGram_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "remove_numbers",
+            "nGram_filter",
+            "lowercase",
+            "time_units"
+          ]
+        }
+      },
+      "filter": {
+        "time_units": {
+          "type": "pattern_replace",
+          "pattern": """\d+(?:\.\d+)?(?:s|ms)""",
+          "replacement": "_"
+        },
+        "remove_numbers": {
+          "type": "keep_types",
+          "mode": "exclude",
+          "types": [
+            "<NUM>"
+          ]
+        },
+        "nGram_filter": {
+          "type": "shingle",
+          "max_shingle_size": 3,
+          "min_shingle_size": 3,
+          "output_unigrams": false
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "message": {
+          "type": "text",
+          "analyzer": "nGram_analyzer"
+        }
+      }
+    }
+  }
+}

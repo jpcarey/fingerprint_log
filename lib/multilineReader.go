@@ -2,11 +2,9 @@ package lib
 
 import (
 	"bufio"
-	"errors"
 	es "fingerprint_log/elasticsearch"
 	"log"
 	"regexp"
-	"time"
 )
 
 // regex match that line starts with `[YYYY.MM.dd`
@@ -18,6 +16,10 @@ func lineStart(line string) bool {
 
 // ReadLines iterates each line and groups multiline messages together
 func ReadLines(scanner *bufio.Scanner) {
+	go process(es.Client)
+	if es.SearchES {
+		go es.Msearch(es.Client)
+	}
 	if es.IndexToEs {
 		go es.Bulk(es.Client)
 	}
@@ -39,6 +41,14 @@ func ReadLines(scanner *bufio.Scanner) {
 		}
 	}
 
+	close(processQueue)
+	<-processDone
+
+	// if es.SearchES {
+	// 	close(es.MsearchCh)
+	// 	<-es.MsearchDone
+	// }
+
 	// close out es channel and wait for done.
 	if es.IndexToEs {
 		close(es.Ch)
@@ -50,16 +60,17 @@ func ReadLines(scanner *bufio.Scanner) {
 	}
 }
 
-func flush(message []string) (string, error) {
+func flush(message []string) {
 	if len(message) > 0 {
 		Counter("messages", 1)
-		key, line := Analyze(message)
-		if es.IndexToEs {
-			d := es.Doc{Message: line, Timestamp: time.Now(), Hash: key}
-			Counter("es_docs", 1)
-			es.Ch <- d
-		}
-		return line, nil
+		// key, line := Analyze(message)
+		analyze(message)
+		// if es.IndexToEs {
+		// 	d := es.Doc{Message: line, Timestamp: time.Now(), Hash: key}
+		// 	Counter("es_docs", 1)
+		// 	es.Ch <- d
+		// }
+		// return line, nil
 	}
-	return "", errors.New("Blank line")
+	// return "", errors.New("Blank line")
 }
