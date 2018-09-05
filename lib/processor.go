@@ -32,20 +32,22 @@ func process(client *elastic.Client) {
 			m, more := <-processQueue
 			if more {
 				tokens := tokenize(m.clean)
-				var matchQuery *elastic.MatchQuery
+				// var matchQuery *elastic.MatchQuery
 				var triGram *elastic.MatchQuery
 				if len(tokens) > 1024 {
 					stringEnd := tokens[1024].Endoffset
-					matchQuery = elastic.NewMatchQuery("message", m.clean[:stringEnd])
+					// matchQuery = elastic.NewMatchQuery("message", m.clean[:stringEnd])
 					triGram = elastic.NewMatchQuery("message.tri", m.clean[:stringEnd])
 				} else {
-					matchQuery = elastic.NewMatchQuery("message", m.clean)
+					// matchQuery = elastic.NewMatchQuery("message", m.clean)
 					triGram = elastic.NewMatchQuery("message.tri", m.clean)
 				}
 
 				r := elastic.NewSearchRequest().Index("test").
-					Source(elastic.NewSearchSource().Query(matchQuery).Query(triGram).From(0).Size(2))
+					Source(elastic.NewSearchSource().Query(triGram).From(0).Size(1))
+					// Source(elastic.NewSearchSource().Query(matchQuery).Query(triGram).From(0).Size(2))
 				m.query = r
+				Counter("searches", 1)
 				msearch.Add(r)
 
 				b = append(b, m)
@@ -71,11 +73,14 @@ func process(client *elastic.Client) {
 				// 	Source(elastic.NewSearchSource().Query(matchQuery).Query(triGram).From(0).Size(1))
 
 			} else {
-				searchResult, err := msearch.Do(ctx)
-				if err != nil {
-					log.Fatal(err)
+				// final search, but only if we have data
+				if len(b) > 0 {
+					searchResult, err := msearch.Do(ctx)
+					if err != nil {
+						log.Fatal(err)
+					}
+					parseSearchResponse(searchResult, b)
 				}
-				parseSearchResponse(searchResult, b)
 
 				processDone <- true
 

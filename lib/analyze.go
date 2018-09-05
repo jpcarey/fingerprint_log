@@ -25,6 +25,8 @@ type Message struct {
 
 var javaclass = regexp.MustCompile(`^(?:[a-zA-Z0-9-]+\.)+[A-Za-z0-9$]+`)
 var indented = regexp.MustCompile(`^\s+`)
+var causedby = regexp.MustCompile(`^Caused by:`)
+var causedbyCleanup = regexp.MustCompile(`(\[.*\](?:\s|$))`)
 
 // func (s String) tolower() String {
 // 	return String(strings.ToLower(string(s)))
@@ -48,35 +50,29 @@ var indented = regexp.MustCompile(`^\s+`)
 
 func checkJavaClass(message []string) (bool, int) {
 	size := len(message)
+	stackTrace := false
+	startFrom := 0
+	// indentedLine := 0
 	for i, m := range message {
 		if i == 0 {
 			continue
 		}
 		if javaclass.MatchString(m) {
+			stackTrace = true
+			// sometimes the stack trace is the last line
+			// this is common with a large query dumped in the log
 			if i+1 == size {
-				return true, i + 1
-			} else if i+1 < size && indented.MatchString(message[i+1]) {
-				return true, i + 1
-			} else if i+2 < size && indented.MatchString(message[i+2]) {
-				return true, i + 2
-			} else if i+3 < size && indented.MatchString(message[i+3]) {
-				return true, i + 3
+				startFrom = i + 1
 			}
-			// } else if (i+2) < size && strings.HasPrefix(message[i+2], "  ") {
-			// 	return true, i + 2
-			// } else if (i+3) < size && strings.HasPrefix(message[i+3], "  ") {
-			// 	return true, i + 3
-			// 	fmt.Println("WTF!!")
-			// }
-
-			// } else if i < size-1 && strings.HasPrefix(message[i+1], "	") {
-			// 	return true, i + 1
-			// } else if i < size-2 && strings.HasPrefix(message[i+2], " ") {
-			// 	return true, i + 2
-			// }
+		}
+		if stackTrace && startFrom == 0 && indented.MatchString(m) {
+			startFrom = i + 1
+		}
+		if causedby.MatchString(m) {
+			message[i] = causedbyCleanup.ReplaceAllString(m, "")
 		}
 	}
-	return false, 0
+	return stackTrace, startFrom
 }
 
 func analyze(message []string) {
@@ -105,52 +101,5 @@ func analyze(message []string) {
 
 	if !(duplicate(m.hash)) {
 		processQueue <- m
-
-		// fmt.Println("<|><|><|><|><|><|><|><|><|><|><|><|><|><|><|><|><|><|><|><|>")
-		// data := dup{line: m.stripped, queryEnd: 0}
-		// if len(tokens) > 1024 {
-		// 	// fmt.Printf(">>>>>>> size: %d\n", len(s))
-		// 	data.queryEnd = tokens[1024].Endoffset
-		// }
-
-		// if dup.queryEnd > 0 {
-		// 	line = line[:dup.queryEnd]
-		// }
-
-		// Build ES Search Request
-		// matchQuery := elastic.NewMatchQuery("message", line)
-		// triGram := elastic.NewMatchQuery("message.tri", line)
-		// r := elastic.NewSearchRequest().Index("test").
-		// 	Source(elastic.NewSearchSource().Query(matchQuery).Query(triGram).From(0).Size(1))
-
-		// es.MsearchCh <- r
-
-		//
-		// es.Search(line, key, es.Client)
-		// matched := es.Search(line, key, es.Client)
-		// if matched {
-		// 	Counter("es_matched", 1)
-		// } else {
-		// 	fmt.Println(line)
-		// }
-
 	}
-
-	//
-	// if err := segmenter.Err(); err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// key := checkDuplicate(data)
-
-	// if indexToEs {
-	// 	d := es.Doc{
-	// 		Message:   line,
-	// 		Timestamp: time.Now(),
-	// 		Hash:      key,
-	// 	}
-	//
-	// 	go es.Index(d, es.Client)
-	// }
-	// return key, m.stripped
 }

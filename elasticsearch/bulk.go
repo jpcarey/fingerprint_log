@@ -54,7 +54,10 @@ func Bulk(client *elastic.Client) {
 					// "bulk" is reset after Do, so you can reuse it
 				}
 			} else {
-				bulk.Do(ctx)
+				// submit last batch, only if we have data
+				if bulk.NumberOfActions() > 0 {
+					bulk.Do(ctx)
+				}
 				Done <- true
 				return
 			}
